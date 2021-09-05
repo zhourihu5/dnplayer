@@ -7,6 +7,7 @@
 
 #include "DNFFmpeg.h"
 #include "macro.h"
+#include ""
 
 
 void *prepareFFmpeg_(void *args) {
@@ -39,6 +40,7 @@ void DNFFmpeg::prepare() {
 
 void DNFFmpeg::prepareFFmpeg() {
     //todo 最新版本好像不用 regiest_all了
+//    av_register_all();
     avformat_network_init();
     // 代表一个 视频/音频 包含了视频、音频的各种信息
     formatContext = avformat_alloc_context();
@@ -70,7 +72,7 @@ void DNFFmpeg::prepareFFmpeg() {
     for (int i = 0; i < formatContext->nb_streams; ++i) {
         AVCodecParameters *codecpar = formatContext->streams[i]->codecpar;
         //找到解码器
-        AVCodec *dec = avcodec_find_decoder(codecpar->codec_id);
+        const AVCodec *dec = avcodec_find_decoder(codecpar->codec_id);
         if (!dec) {
             if (javaCallHelper) {
                 javaCallHelper->onError(THREAD_CHILD, FFMPEG_FIND_DECODER_FAIL);

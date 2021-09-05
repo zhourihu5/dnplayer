@@ -44,6 +44,7 @@ public class MainActivity extends RxAppCompatActivity implements TabLayout
         tabLayout.addOnTabSelectedListener(this);
         //添加标签
         addTabs();
+        startActivity(new Intent(this,PlayActivity.class));
     }
 
     private void addTabs() {
