@@ -1,5 +1,6 @@
 package com.dongnao.dnplayer.player;
 
+import android.util.Log;
 import android.view.Surface;
 import android.view.SurfaceHolder;
 import android.view.SurfaceView;
@@ -49,9 +50,10 @@ public class DNPlayer implements SurfaceHolder.Callback {
         }
     }
 
-    public void onPrepare() {
+    public void onPrepare(int w,int h) {
+        Log.e("onPrepare",String.format("width=%d,height=%d",w,h));
         if (null != onPrepareListener) {
-            onPrepareListener.onPrepared();
+            onPrepareListener.onPrepared(w,h);
         }
     }
 
@@ -137,7 +139,7 @@ public class DNPlayer implements SurfaceHolder.Callback {
 
 
     public interface OnPrepareListener {
-        void onPrepared();
+        void onPrepared(int w, int h);
     }
 
     public interface OnErrorListener {

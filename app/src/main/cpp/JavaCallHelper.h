@@ -20,7 +20,7 @@ public:
 
     void onError(int thread, int code);
 
-    void onParpare(int thread);
+    void onParpare(int thread, int i, int i1);
 
     void onProgress(int thread, int progress);
 

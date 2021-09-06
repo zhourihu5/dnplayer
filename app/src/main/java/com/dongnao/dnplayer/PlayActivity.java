@@ -3,9 +3,13 @@ package com.dongnao.dnplayer;
 import android.content.res.Configuration;
 import android.os.Bundle;
 import android.support.annotation.Nullable;
+import android.util.DisplayMetrics;
 import android.view.SurfaceView;
 import android.view.View;
+import android.view.ViewGroup;
 import android.view.WindowManager;
+import android.widget.LinearLayout;
+import android.widget.RelativeLayout;
 import android.widget.SeekBar;
 
 import com.dongnao.dnplayer.player.DNPlayer;
@@ -23,6 +27,7 @@ public class PlayActivity extends RxAppCompatActivity implements SeekBar.OnSeekB
     private int progress;
     private boolean isTouch;
     private boolean isSeek;
+    int videoW,videoH;
 
     @Override
     protected void onCreate(@Nullable Bundle savedInstanceState) {
@@ -37,21 +42,27 @@ public class PlayActivity extends RxAppCompatActivity implements SeekBar.OnSeekB
         dnPlayer.setOnPrepareListener(new DNPlayer.OnPrepareListener() {
             /**
              * 视频信息获取完成 随时可以播放的时候回调
+             * @param w
+             * @param h
              */
             @Override
-            public void onPrepared() {
+            public void onPrepared(int w, int h) {
                 //获得时间
                 int duration = dnPlayer.getDuration();
-                //直播： 时间就是0
-                if (duration != 0){
-                   runOnUiThread(new Runnable() {
-                       @Override
-                       public void run() {
-                           //显示进度条
-                           seekBar.setVisibility(View.VISIBLE);
-                       }
-                   });
-                }
+                runOnUiThread(new Runnable() {
+                    @Override
+                    public void run() {
+                        //直播： 时间就是0
+                        if (duration != 0){
+                            //显示进度条
+                            seekBar.setVisibility(View.VISIBLE);
+                        }
+                        videoH=h;
+                        videoW=w;
+                        setVideoView(surfaceView, w, h);
+                    }
+                });
+
                 dnPlayer.start();
             }
         });
@@ -94,6 +105,19 @@ public class PlayActivity extends RxAppCompatActivity implements SeekBar.OnSeekB
         dnPlayer.setDataSource(url);
     }
 
+    private void setVideoView(SurfaceView surfaceView, int w, int h) {
+        //设置视频的宽高
+        ViewGroup.LayoutParams layoutParams = surfaceView.getLayoutParams();
+        DisplayMetrics displayMetrics = new DisplayMetrics();
+        getWindowManager().getDefaultDisplay().getMetrics(displayMetrics);
+        int dw=displayMetrics.widthPixels;
+        int dh=displayMetrics.heightPixels;
+        float  f=Math.min(1.0f*dw/ w,1.0f*dh/ h);
+        layoutParams.width= (int) (f* w);
+        layoutParams.height= (int) (f* h);
+        surfaceView.setLayoutParams(layoutParams);
+    }
+
     @Override
     public void onConfigurationChanged(Configuration newConfig) {
         super.onConfigurationChanged(newConfig);
@@ -110,7 +134,7 @@ public class PlayActivity extends RxAppCompatActivity implements SeekBar.OnSeekB
         seekBar = findViewById(R.id.seekBar);
         seekBar.setOnSeekBarChangeListener(this);
         seekBar.setProgress(progress);
-
+        setVideoView(surfaceView, videoW, videoH);
     }
 
     @Override

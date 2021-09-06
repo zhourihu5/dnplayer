@@ -67,6 +67,7 @@ void DNFFmpeg::prepareFFmpeg() {
     }
     //视频时长（单位：微秒us，转换为秒需要除以1000000）
     duration = formatContext->duration / 1000000;
+    int width=0,height=0;
     for (int i = 0; i < formatContext->nb_streams; ++i) {
         AVCodecParameters *codecpar = formatContext->streams[i]->codecpar;
         //找到解码器
@@ -111,6 +112,8 @@ void DNFFmpeg::prepareFFmpeg() {
             int fps = av_q2d(formatContext->streams[i]->avg_frame_rate);
             videoChannel = new VideoChannel(i, javaCallHelper, codecContext, base, fps);
             videoChannel->setRenderCallback(renderFrame);
+             width = codecpar->width;
+             height= codecpar->height;
         }
     }
 
@@ -121,7 +124,7 @@ void DNFFmpeg::prepareFFmpeg() {
         return;
     }
     if (javaCallHelper)
-        javaCallHelper->onParpare(THREAD_CHILD);
+        javaCallHelper->onParpare(THREAD_CHILD, width, height);
 }
 
 void *startThread(void *args) {
