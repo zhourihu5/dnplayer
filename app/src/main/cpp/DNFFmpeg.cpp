@@ -39,7 +39,6 @@ void DNFFmpeg::prepare() {
 
 void DNFFmpeg::prepareFFmpeg() {
     //todo 最新版本好像不用 regiest_all了
-//    av_register_all();
     avformat_network_init();
     // 代表一个 视频/音频 包含了视频、音频的各种信息
     formatContext = avformat_alloc_context();
