@@ -172,8 +172,11 @@ void DNFFmpeg::play() {
                 audioChannel->pkt_queue.enQueue(packet);
             } else if (videoChannel && packet->stream_index == videoChannel->channelId) {
                 videoChannel->pkt_queue.enQueue(packet);
+            } else{
+                BaseChannel::releaseAvPacket(packet);
             }
         } else if (ret == AVERROR_EOF) {
+            BaseChannel::releaseAvPacket(packet);
             //读取完毕 但是不一定播放完毕
             if (videoChannel->pkt_queue.empty() && videoChannel->frame_queue.empty() &&
                 audioChannel->pkt_queue.empty() && audioChannel->frame_queue.empty()) {
@@ -182,6 +185,7 @@ void DNFFmpeg::play() {
             }
             //因为seek 的存在，就算读取完毕，依然要循环 去执行av_read_frame(否则seek了没用...)
         } else {
+            BaseChannel::releaseAvPacket(packet);
             break;
         }
 
