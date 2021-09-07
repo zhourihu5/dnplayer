@@ -99,8 +99,8 @@ public class PlayActivity extends RxAppCompatActivity implements SeekBar.OnSeekB
         seekBar.setOnSeekBarChangeListener(this);
         url = getIntent().getStringExtra("url");
 //        dnPlayer.setDataSource("/sdcard/b.mp4");
-//        url="https://file.roadshowing.com/video/roadshow/2020/09/video/huawei2020kfzdh.mp4";
         url="file:/data/data/com.dongnao.dnplayer/cache/c1ac99874e61248eb9cf2ce406dce1d3.mp4";
+//        url="https://file.roadshowing.com/video/roadshow/2020/09/video/huawei2020kfzdh.mp4";
 //        url="https://devimages.apple.com.edgekey.net/streaming/examples/bipbop_4x3/bipbop_4x3_variant.m3u8";
         dnPlayer.setDataSource(url);
     }
