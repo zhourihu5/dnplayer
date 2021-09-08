@@ -41,7 +41,7 @@ target_link_libraries(
                        dnplayer
                        avfilter avformat    avcodec  avutil  swresample swscale
                       # ffmpeg
-#                        crypto  ssl
+                        crypto  ssl
                         rtmp
                      z
                          OpenSLES
