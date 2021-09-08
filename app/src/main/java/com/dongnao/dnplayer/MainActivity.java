@@ -8,11 +8,17 @@ import android.support.v7.widget.LinearLayoutManager;
 import android.support.v7.widget.RecyclerView;
 
 import com.dongnao.live.LiveManager;
+import com.dongnao.live.list.Data;
+import com.dongnao.live.list.Items;
 import com.dongnao.live.list.LiveList;
+import com.dongnao.live.list.Pictures;
+import com.dongnao.live.room.Info;
 import com.dongnao.live.room.Room;
 import com.dongnao.live.room.Videoinfo;
 import com.trello.rxlifecycle2.android.ActivityEvent;
 import com.trello.rxlifecycle2.components.support.RxAppCompatActivity;
+
+import java.util.ArrayList;
 
 import io.reactivex.android.schedulers.AndroidSchedulers;
 import io.reactivex.schedulers.Schedulers;
@@ -44,7 +50,7 @@ public class MainActivity extends RxAppCompatActivity implements TabLayout
         tabLayout.addOnTabSelectedListener(this);
         //添加标签
         addTabs();
-        startActivity(new Intent(this,PlayActivity.class));
+//        startActivity(new Intent(this,PlayActivity.class));
     }
 
     private void addTabs() {
@@ -84,6 +90,54 @@ public class MainActivity extends RxAppCompatActivity implements TabLayout
 
                     @Override
                     public void onNext(LiveList liveList) {
+                        if(liveList==null){
+                            liveList=new LiveList();
+                        }
+                        if(liveList.getData()==null){
+                            Data data=new Data();
+                            liveList.setData(data);
+                        }
+                        if(liveList.getData().getItems()==null){
+                            liveList.getData().setItems(new ArrayList<>());
+                        }
+                        if(liveList.getData().getItems().size()<1){
+                            Items items=null;
+                            Pictures pictures=null;
+
+                            items= new Items();
+                            items.setId("file:/data/data/com.dongnao.dnplayer/cache/c1ac99874e61248eb9cf2ce406dce1d3.mp4");
+                            items.setName(items.getId());
+                            pictures= new Pictures();
+                            pictures.setImg(items.getId());
+                            items.setPictures(pictures);
+                            liveList.getData().getItems().add(items);
+
+                            items= new Items();
+                            items.setId("https://file.roadshowing.com/video/roadshow/2020/09/video/huawei2020kfzdh.mp4");
+                            items.setName(items.getId());
+                            pictures= new Pictures();
+                            pictures.setImg(items.getId());
+                            items.setPictures(pictures);
+                            liveList.getData().getItems().add(items);
+
+                            items= new Items();
+                            items.setId("http://192.188.0.116:8080/hls/mystream_src.m3u8");
+                            items.setName(items.getId());
+                            pictures= new Pictures();
+                            pictures.setImg(items.getId());
+                            items.setPictures(pictures);
+                            liveList.getData().getItems().add(items);
+
+                            items= new Items();
+                            items.setId("rtmp://video.roadshowing.com/live/48035");
+                            items.setName(items.getId());
+                            pictures= new Pictures();
+                            pictures.setImg(items.getId());
+                            items.setPictures(pictures);
+                            liveList.getData().getItems().add(items);
+
+
+                        }
                         liveAdapter.setLiveList(liveList);
                         liveAdapter.notifyDataSetChanged();
                     }
@@ -91,6 +145,7 @@ public class MainActivity extends RxAppCompatActivity implements TabLayout
                     @Override
                     public void onError(Throwable t) {
                         t.printStackTrace();
+                        onNext(null);
                     }
 
                     @Override
@@ -122,6 +177,35 @@ public class MainActivity extends RxAppCompatActivity implements TabLayout
 
                     @Override
                     public void onNext(Room room) {
+                        if(room==null){
+                            room=new Room();
+                            Intent intent = new Intent(MainActivity.this, PlayActivity.class);
+                            intent.putExtra("url", id);
+                            startActivity(intent);
+                            return;
+                        }
+                        if(room.getData()==null){
+                            room.setData(new com.dongnao.live.room.Data());
+                        }
+                        if(room.getData().getInfo()==null){
+                            room.getData().setInfo(new Info());
+                        }
+                        if(room.getData().getInfo().getVideoinfo()==null){
+                            room.getData().getInfo().setVideoinfo(new Videoinfo());
+                        }
+                        if(room.getData().getInfo().getVideoinfo().getPlflag()==null){
+                            room.getData().getInfo().getVideoinfo().setPlflag(id+"_");
+                        }
+                        if(room.getData().getInfo().getVideoinfo().getRoom_key()==null){
+                            room.getData().getInfo().getVideoinfo().setRoom_key(id+"_");
+                        }
+                        if(room.getData().getInfo().getVideoinfo().getSign()==null){
+                            room.getData().getInfo().getVideoinfo().setSign(id+"_");
+                        }
+                        if(room.getData().getInfo().getVideoinfo().getTs()==null){
+                            room.getData().getInfo().getVideoinfo().setTs(id+"_");
+                        }
+
                         Videoinfo info = room.getData().getInfo().getVideoinfo();
                         String[] plflags = info.getPlflag().split("_");
                         String room_key = info.getRoom_key();
@@ -143,6 +227,7 @@ public class MainActivity extends RxAppCompatActivity implements TabLayout
                     @Override
                     public void onError(Throwable t) {
                         t.printStackTrace();
+                        onNext(null);
                     }
 
                     @Override
