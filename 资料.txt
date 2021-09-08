@@ -1,0 +1,16 @@
+播放器的问题：
+1、dnplayer 能不能播我们流媒体服务器的直播
+	能。但是
+	1、不能使用ip，需要使用域名
+	2、一定使用ip的话，需要在编译ffmpeg的时候 集成 librtmp
+	
+2、dnplayer的内存泄露问题 
+	DNFFmpeg::play() 内
+	 AVPacket *packet = av_packet_alloc();
+	 如果出现 elseif 与else 没有被释放
+	 
+	 
+作业：
+	我们实现了软编与摄像头直播。
+	自己实现MediaCodec与录屏直播(手游直播)
+	屏幕数据采集： MediaProjectionManager
