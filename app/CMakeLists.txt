@@ -2,7 +2,8 @@
 cmake_minimum_required(VERSION 3.4.1)
 
 
-
+# 引入指定目录下的CMakeLists.txt
+add_subdirectory(src/main/cpp/librtmp)
 
 
 file(GLOB SOURCE src/main/cpp/*.cpp )
@@ -40,7 +41,8 @@ target_link_libraries(
                        dnplayer
                        avfilter avformat    avcodec  avutil  swresample swscale
                       # ffmpeg
-                        crypto  ssl
+#                        crypto  ssl
+                        rtmp
                      z
                          OpenSLES
                          android
